@@ -7,7 +7,6 @@ import android.view.Menu;
 public class MainActivity extends Activity {
 
     @Override
-    //test
     //test de commentaire
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
