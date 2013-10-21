@@ -1,0 +1,2 @@
+INDEX VERSION 1.126+C:\Users\Nathan\Documents\GitHub\Forum-Rallye\.metadata\.plugins\org.eclipse.jdt.core
+390845175.index
