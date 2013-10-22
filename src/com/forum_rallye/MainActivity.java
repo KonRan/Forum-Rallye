@@ -1,5 +1,6 @@
 package com.forum_rallye;
 
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -19,8 +20,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        Button btn1 = (Button) findViewById(R.id.ButtonQuit);
-        btn1.setOnClickListener(new OnClickListener() {
+        Button btnQuit = (Button) findViewById(R.id.ButtonQuit);
+        btnQuit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
@@ -29,11 +30,22 @@ public class MainActivity extends Activity {
             }
         });
         
-        ImageView img = (ImageView) findViewById(R.id.imageForum);
-        img.setOnClickListener(new OnClickListener() {
+        ImageView imgFR = (ImageView) findViewById(R.id.imageForum);
+        imgFR.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
             	Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.forum-rallye.com"));
-            	startActivity(intent);            }
+            	startActivity(intent);     
+            	}
+        });
+        
+        Button btnReg = (Button) findViewById(R.id.ButtonReg);
+        btnReg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doSelectRegional();
+            }
+
+			
         });
     }
 
@@ -44,5 +56,12 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+    
+    private void doSelectRegional() {
+    	finish();
+		Intent intent = new Intent(getApplicationContext(), SelectRegionalActivity.class);
+		startActivity(intent);
+		
+	}
     
 }
