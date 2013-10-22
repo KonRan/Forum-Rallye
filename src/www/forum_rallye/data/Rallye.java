@@ -33,7 +33,7 @@ public class Rallye {
 		}
 		
 		public GregorianCalendar getDateFin() {
-			return dateDeb;
+			return dateFin;
 		}
 		
 		public void setDateFin(GregorianCalendar dateFin) {
