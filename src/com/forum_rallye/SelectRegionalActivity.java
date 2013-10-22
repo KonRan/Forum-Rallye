@@ -78,6 +78,7 @@ public class SelectRegionalActivity extends Activity {
 			            map = new HashMap<String, Object>();
 			            map.put("nom", r.getNom());           
 			            map.put("dateDeb", String.valueOf(r.getDateDeb()));
+			            map.put("dateFin", String.valueOf(r.getDateDeb()));
 			            map.put("id", String.valueOf(r.getId()));
 			            listItem.add(map);}
 					
@@ -96,7 +97,7 @@ public class SelectRegionalActivity extends Activity {
 	 
 	        //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
 	        SimpleAdapter mSchedule = new SimpleAdapter (this.getBaseContext(), listItem, R.layout.affichageitem,
-	               new String[] {"nom", "dateDeb"}, new int[] {R.id.nom, R.id.dateDeb});
+	               new String[] {"nom", "dateDeb", "dateFin"}, new int[] {R.id.nom, R.id.dateDeb, R.id.dateFin});
 	        mSchedule.setViewBinder(new MyViewBinder());
 	 
 	        //On attribut à notre listView l'adapter que l'on vient de créer
@@ -131,19 +132,6 @@ public class SelectRegionalActivity extends Activity {
 
 	 
 	    }
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
 
 	/**
 	 * Set up the {@link android.app.ActionBar}.

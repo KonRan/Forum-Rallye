@@ -43,10 +43,12 @@ public class StaticReader {
 	       header = reader.nextString();
 	       if (header.equals("nom")) {
 	         rallye.setNom(reader.nextString());
-	       } else if (header.equals("id")) {
-	    	   rallye.setId(reader.nextLong());
 	       } else if (header.equals("dateDeb")) {
 	    	   rallye.setDateDeb(readDate(reader));
+	       } else if (header.equals("dateFin")) {
+	    	   rallye.setDateFin(readDate(reader));
+	       } else if (header.equals("id")) {
+		    	   rallye.setId(reader.nextLong());
 	       } else {
 	         reader.skipValue();
 	       }

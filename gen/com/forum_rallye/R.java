@@ -30,6 +30,7 @@ public final class R {
         public static final int ButtonReg=0x7f080003;
         public static final int ButtonWRC=0x7f080001;
         public static final int dateDeb=0x7f080009;
+        public static final int dateFin=0x7f08000a;
         public static final int imageForum=0x7f080000;
         public static final int listviewregional=0x7f080007;
         public static final int nom=0x7f080008;

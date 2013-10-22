@@ -6,6 +6,7 @@ public class Rallye {
 
 		private String nom;
 		private GregorianCalendar dateDeb;
+		private GregorianCalendar dateFin;
 		private long id;
 		
 		public Rallye()
@@ -13,6 +14,7 @@ public class Rallye {
 			id = -1;
 			nom = null;
 			dateDeb = null;
+			dateFin = null;
 		}
 
 		public String getNom() {
@@ -28,6 +30,14 @@ public class Rallye {
 		
 		public void setDateDeb(GregorianCalendar dateDeb) {
 			this.dateDeb = dateDeb;
+		}
+		
+		public GregorianCalendar getDateFin() {
+			return dateDeb;
+		}
+		
+		public void setDateFin(GregorianCalendar dateFin) {
+			this.dateFin = dateFin;
 		}
 		
 		public long getId() {
