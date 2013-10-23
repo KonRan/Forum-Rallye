@@ -35,19 +35,20 @@ public class StaticReader {
 	
 
 	private static Rallye readRallye(JsonReader reader) throws IOException {
-		
+		Log.d("DEBUG", "Rentre dans readRallye");
 		Rallye rallye = new Rallye();
 		String header;
-	    reader.beginObject();
 	    while (reader.hasNext()) {
-	       header = reader.nextString();
+	    	header = reader.nextName();
 	       if (header.equals("nom")) {
+				Log.d("DEBUG", "Check");
+
 	         rallye.setNom(reader.nextString());
-	       } else if (header.equals("dateDeb")) {
+	       } else if (header.equals("jourDepart")) {
 	    	   rallye.setDateDeb(readDate(reader));
-	       } else if (header.equals("dateFin")) {
+	       } else if (header.equals("joueArrivee")) {
 	    	   rallye.setDateFin(readDate(reader));
-	       } else if (header.equals("id")) {
+	       } else if (header.equals("id_course")) {
 		    	   rallye.setId(reader.nextLong());
 	       } else {
 	         reader.skipValue();
@@ -60,25 +61,29 @@ public class StaticReader {
 	
 	public static Vector<Rallye> readRallyes(JsonReader reader) throws IOException{
 		Vector<Rallye> rallyes = new Vector<Rallye>();
-		reader.beginArray();
-		String header;
-		while(reader.hasNext())
-		{
-			reader.beginObject();
-			header =reader.nextString();
-			if(header.equals("Nom"))
+		reader.beginObject();
+		if (reader.nextName().equals("course")){
+			String header;
+			reader.beginArray();
+			while(reader.hasNext())
 			{
-			try{
-				rallyes.add(readRallye(reader));}
-			catch(IOException e)
-			{
-				Log.d("DEBUG", "Crash dans readRallye");
+				reader.beginObject();
+				header=reader.nextName();
+				if(header.equals("nom"))
+				{
+				try{
+					rallyes.add(readRallye(reader));}
+				catch(IOException e)
+				{
+					Log.d("DEBUG", "Crash dans readRallye");
+				}
+				}
 			}
-			}
+			reader.endArray();
 			reader.endObject();
+			Log.d("rallye",rallyes.get(1).getNom());
 		}
-		reader.endArray();
-		Log.d("rallye",rallyes.get(1).getNom());
+		
 		return rallyes;
 		
 	}
