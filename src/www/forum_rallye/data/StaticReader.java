@@ -9,6 +9,7 @@ import android.util.Log;
 public class StaticReader {
 	
 	public static Vector<Rallye> readUsers(JsonReader reader) throws IOException{
+		//bug
 		Vector<Rallye> rallyes = new Vector<Rallye>();
 		reader.beginArray();
 		String header;
