@@ -42,8 +42,6 @@ public class SelectRegionalActivity extends Activity {
 		 //Récupération de la listview créée dans le fichier main.xml
         maListViewPerso = (ListView) findViewById(R.id.listviewregional);
  
-        //Création de la ArrayList qui nous permettra de remplire la listView
-        final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
         
         
         
@@ -53,10 +51,8 @@ public class SelectRegionalActivity extends Activity {
 		try {
 			maPageJson = new RetreiveFeedTask().execute().get();
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (ExecutionException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
         
@@ -78,13 +74,14 @@ public class SelectRegionalActivity extends Activity {
 	            map.put("jourDepart", course.get("jourDepart"));
 	            map.put("jourArrive", course.get("jourArrive"));
 	            map.put("id_course", course.get("id_course"));
-	            ListAdapter adapter = new SimpleAdapter(getApplicationContext(), maListeDesCourses , R.layout.activity_select_regional, new String[] { "Nom course : ", "Jour de départ : ", "Jour d'arrivée : "}, new int[] { R.id.nom, R.id.dateDeb, R.id.dateFin});
-		        maListViewPerso.setAdapter(adapter);
+	            
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } 
-	        
+        }
+        
+        ListAdapter adapter = new SimpleAdapter(getApplicationContext(), maListeDesCourses , R.layout.activity_select_regional, new String[] { "Nom course : ", "Jour de départ : ", "Jour d'arrivée : "}, new int[] { R.id.nom, R.id.dateDeb, R.id.dateFin});
+        maListViewPerso.setAdapter(adapter);
 	 
 	        //Enfin on met un écouteur d'évènement sur notre listView
 	        maListViewPerso.setOnItemClickListener(new OnItemClickListener() {
