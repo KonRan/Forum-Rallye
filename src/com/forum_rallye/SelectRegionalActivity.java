@@ -1,39 +1,33 @@
 package com.forum_rallye;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import www.forum_rallye.data.Rallye;
-import www.forum_rallye.data.StaticReader;
+import www.forum_rallye.data.JSONParser;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.JsonReader;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 
 public class SelectRegionalActivity extends Activity {
 
+	
+	
 	
 	private ListView maListViewPerso;
 	@Override
@@ -42,72 +36,55 @@ public class SelectRegionalActivity extends Activity {
 		setContentView(R.layout.activity_select_regional);
 		// Show the Up button in the action bar.
 		setupActionBar(); 
-	    	
-	    	
+
+
 	        
-	        //Récupération de la listview créée dans le fichier main.xml
-	        maListViewPerso = (ListView) findViewById(R.id.listviewregional);
-	 
-	        //Création de la ArrayList qui nous permettra de remplire la listView
-	        final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
+		 //Récupération de la listview créée dans le fichier main.xml
+        maListViewPerso = (ListView) findViewById(R.id.listviewregional);
+ 
+        //Création de la ArrayList qui nous permettra de remplire la listView
+        final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
+        
+        
+        
+        
 
-	        //On déclare la HashMap qui contiendra les informations pour un item
-	        class Requete extends AsyncTask<Void, Void, HashMap<String, Object>>{
+        JSONObject maPageJson = null;
+		try {
+			maPageJson = new RetreiveFeedTask().execute().get();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ExecutionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+        
+         
+        
 
-				@Override
-				protected HashMap<String, Object> doInBackground(Void... params) {
-					HttpPost httppost = new HttpPost("http://projetfr.zz.mu/selectRegio.php");
-		        	
-					try {
-						// Envoi de la requete
-						HttpClient httpclient = new DefaultHttpClient();
-						
-						// Réponse du serveur
-						HttpResponse response = httpclient.execute(httppost);				
-						JsonReader reader = new JsonReader(
-								new InputStreamReader(response.getEntity()
-										.getContent()));
-						Vector<Rallye> rallyes= StaticReader.readRallyes(reader);
-						rallyes.size();
-						
-						for (Rallye r : rallyes) {
-							final HashMap<String, Object> map = null;
-				            map.put("nom", r.getNom());           
-				            map.put("dateDeb", String.valueOf(r.getDateDeb()));
-				            map.put("dateFin", String.valueOf(r.getDateDeb()));
-				            map.put("id", String.valueOf(r.getId()));
-				            listItem.add(map);}
-						
-					} catch (UnsupportedEncodingException e) {
-						
-						e.printStackTrace();
-					} catch (ClientProtocolException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					
-					return null;
+        JSONArray listeCourses ;
+       final ArrayList < HashMap < String, Object> > maListeDesCourses = new ArrayList < HashMap < String, Object > > ();
 
-				}
+        try {
+            listeCourses = maPageJson.getJSONArray("Courses");
 
-				
+            for(int i = 0; i < listeCourses.length(); i++){
 	        	
-	        }
+                JSONObject course = listeCourses.getJSONObject(i);
+                HashMap<String, Object> map = new HashMap<String, Object>();
+	            map.put("nom", course.get("nom"));
+	            map.put("jourDepart", course.get("jourDepart"));
+	            map.put("jourArrive", course.get("jourArrive"));
+	            map.put("id_course", course.get("id_course"));
+	            ListAdapter adapter = new SimpleAdapter(getApplicationContext(), maListeDesCourses , R.layout.activity_select_regional, new String[] { "Nom course : ", "Jour de départ : ", "Jour d'arrivée : "}, new int[] { R.id.nom, R.id.dateDeb, R.id.dateFin});
+		        maListViewPerso.setAdapter(adapter);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } 
 	        
-	        Requete requete = new Requete();
-	        requete.execute();
-	        
-	 
-	        
-	        
-	 
-	        //Création d'un SimpleAdapter qui se chargera de mettre les items présent dans notre list (listItem) dans la vue affichageitem
-	        SimpleAdapter mSchedule = new SimpleAdapter (this.getBaseContext(), listItem, R.layout.affichageitem,
-	               new String[] {"nom", "dateDeb", "dateFin"}, new int[] {R.id.nom, R.id.dateDeb, R.id.dateFin});
-	 
-	        //On attribut à notre listView l'adapter que l'on vient de créer
-	        maListViewPerso.setAdapter(mSchedule);
 	 
 	        //Enfin on met un écouteur d'évènement sur notre listView
 	        maListViewPerso.setOnItemClickListener(new OnItemClickListener() {
@@ -169,6 +146,23 @@ public class SelectRegionalActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	class RetreiveFeedTask extends AsyncTask<Void, Void, JSONObject> {
+
+        private Exception exception;
+
+		@Override
+		protected JSONObject doInBackground(Void... arg0) {
+			try {
+            	JSONParser jParser = new JSONParser();
+            	JSONObject maPageJson = jParser.getJSONFromUrl("http://projetfr.zz.mu/selectRegio.php");
+                return maPageJson;               	
+            } catch (Exception e) {
+                this.exception = e;
+                return null;
+            }
+		}
 	}
 
 }
